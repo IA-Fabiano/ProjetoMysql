@@ -2,26 +2,19 @@ const express = require("express");
 const app = express();
 const bodyParser=require('body-parser');
 const cors = require('cors');
-const fetch = require("node-fetch");
-const fs = require("fs");
+const op = require('./users');
 // mvc pesquisar
 
 app.use(cors())
 // analise/x-www-form-urlencoded 
 app.use(bodyParser.urlencoded({extended:'true'}));
 
-const readFile = () => {
- const content = fs.readFileSync('./json/clientes.json', 'utf-8')
- 
-  return JSON.parse(content)
- 
-}
 
-app.post('/deletar',function(req, res){
+app.post('/deletar', async(req, res){
   id=req.body.ID;
   // Nome usuário senha all
   if(id){
-    fetch('http://localhost:3000/clientes/'+id, {method:'DELETE'})
+    await op.deletaruser(id)
  
     data = {
       code: 200,
@@ -40,29 +33,28 @@ app.post('/deletar',function(req, res){
   
 });
 
-app.post('/listar',function(req, res){
+app.post('/listar', async(req, res){
 
-  let dados;
-  fetch('http://localhost:3000/clientes', {method:'GET'})
-  .then(resposta => resposta.json())
-  .then((clientes) => {
-    dados = clientes
-    console.log(dados)
+  console.log('todos users')
+
+  const todos = await op.todosuser()
+
+  console.log(todos)
     var data = {
       code: 200,
       mensage: 'Lista',
       dados: dados
     };
     res.json(data);
-  });
+ 
  
 });
 
-app.post('/cadastro',function(req, res){
-
+app.post('/cadastro', async(req, res){
+   receb=(req.body)
   let validar=false
-   if(req.body.Username){ 
-      if(req.body.nome){ 
+   if(receb.Username){ 
+      if(receb.nome){ 
            if(req.body.Senha){
             let dados = {'Username':req.body.Username, 'Nome':req.body.nome, 'Senha':req.body.Senha};
             console.log(dados)       
@@ -123,7 +115,7 @@ app.post('/cadastro',function(req, res){
 
 });
 
-app.post('/login',function(req, res) {
+app.post('/login', async(req, res) {
     console.log(req.body); //console to verify the body data received on this endpoint request
    
 
