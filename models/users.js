@@ -1,7 +1,7 @@
-const db = require('./db');
-
-const todosuser = async() =>{
-  sql = 'SELECT * FROM usuarios ORDER BY user_id DESC'
+const bd = require('./sql');
+var db = bd.conectiondb();
+const todos_user = async() =>{
+  sql = 'SELECT * FROM users ORDER BY user_id DESC'
   const linhas = await db.query(sql)
 
    return await linhas
@@ -9,57 +9,58 @@ const todosuser = async() =>{
 
 }
 
-const cadastraruser = async(clien) =>{
-    sql = 'INSERT INTO usuarios VALUES (?, ?, ?)'
+const cadastrar_user = async(clien) =>{
+    sql = 'INSERT INTO users VALUES (?, ?, ?)'
     res = [clien.user_nome, clien.user_usuario, clien.user_senha]
     const linhas = await db.query(sql, res)
   
-     return await linhas
+    return await linhas
   
   
 }
 
-const atualizaruser = async(id,clien) =>{
-    sql = 'UPDATE INTO usuarios VALUES (?, ?, ?) WHERE user_id=?'
+const atualizar_user = async(id,clien) =>{
+    sql = 'UPDATE INTO users VALUES (?, ?, ?) WHERE user_id=?'
     res = [clien.user_nome, clien.user_usuario, clien.user_senha,id]
     const linhas = await db.query(sql, res)
   
-     return await linhas
+    return await linhas
 
 }
 
-const deletaruser = async(id) =>{
-    sql = 'DELETE FROM usuarios WHERE user_id=?'
+const deletar_user = async(id) =>{
+    sql = 'DELETE FROM users WHERE user_id=?'
     res = [id]
-    const linhas = await db.query(SQL, res)
+    const linhas = await db.query(sql, res)
   
-     return await linhas
+    return await linhas
 
 }
 
-const Verificaruser = async(clien) =>{
-    sql = 'SELECT * FROM usuarios WHERE user_usuario=?'
-    res = [clien.user_usuario]
-    const linhas = await db.query(SQL, res)
+const Verificar_user = async(clien) =>{
+    sql = 'SELECT * FROM users WHERE user_usuario=?'
+   // res = {clien.user_usuario}
+    const linhas = await db.query(sql, clien)
   
-     return await linhas
+    return await linhas
 
 }
 
-const verificarsenha = async(clien) =>{
-    sql = 'SELECT * FROM usuarios WHERE user_usuario=? AND user_senha=?'
+const verificar_senha = async(clien) =>{
+    sql = 'SELECT * FROM users WHERE user_usuario=? AND user_senha=?'
     res = [clien.user_usuario, clien.user_senha]
-    const linhas = await db.query(SQL, res)
+    const linhas = await db.query(sql, res)
   
-     return await linhas
+    return await linhas
 
 }
 
 
 
-module.exports = {todosuser, cadastraruser, atualizaruser, deletaruser, verificarsenha, Verificaruser}
+module.exports = {todos_user, cadastrar_user, atualizar_user, deletar_user, verificar_senha, Verificar_user}
 
 //EXEMPLO DE COMO FICARIA NO CONTROLLER
+/*
 (async()=>{
     const op = require('./users');
     
@@ -87,4 +88,4 @@ module.exports = {todosuser, cadastraruser, atualizaruser, deletaruser, verifica
     await op.deletaruser(id)
 
 
-    })
+    }) */
